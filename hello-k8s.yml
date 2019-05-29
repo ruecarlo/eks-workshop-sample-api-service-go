@@ -29,6 +29,21 @@ spec:
       labels:
         app: hello-k8s
     spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 1
+            preference:
+              matchExpressions:
+              - key: lifecycle
+                operator: In
+                values:
+                - Ec2Spot
+      tolerations:
+      - key: "spotInstance"
+        operator: "Equal"
+        value: "true"
+        effect: "PreferNoSchedule"
       containers:
         - name: hello-k8s
           image: CONTAINER_IMAGE
