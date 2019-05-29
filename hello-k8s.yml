@@ -49,11 +49,11 @@ spec:
           image: CONTAINER_IMAGE
           resources:
             requests:
-              memory: "64Mi"
-              cpu: "256m"
-            limits:
-              memory: "128Mi"
+              memory: "256Mi"
               cpu: "1024m"
+            limits:
+              memory: "512Mi"
+              cpu: "2048m"
           securityContext:
             privileged: false
             readOnlyRootFilesystem: true
