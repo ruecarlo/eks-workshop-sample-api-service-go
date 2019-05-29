@@ -23,12 +23,16 @@ func main() {
 			pair := strings.Split(e, "=")
 			res.EnvVars = append(res.EnvVars, pair[0]+"="+pair[1])
 		}
+		fmt.Println("Environment variables added to results")
 
 		for i := 1; i <= 90; i++ {
 			res.Fib = append(res.Fib, f())
 		}
+		fmt.Println("Fibonacci sequence calculated")
+
 		
 		res.MonteCarlo = monteCarloPi(100000000)
+		fmt.Println("Monte Carlo Pi calculation completed")
 
 		// Beautify the JSON output
 		out, _ := json.MarshalIndent(res, "", "  ")
@@ -38,7 +42,7 @@ func main() {
 
 		io.WriteString(w, string(out))
 
-		fmt.Println("Hello world - the log message")
+		fmt.Println("Result ready")
 	})
 	http.ListenAndServe(":8080", nil)
 }
