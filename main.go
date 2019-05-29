@@ -28,7 +28,7 @@ func main() {
 			res.Fib = append(res.Fib, f())
 		}
 		
-		res.MonteCarlo = append(res.MonteCarlo, monteCarloPi(10000000))
+		res.MonteCarlo = monteCarloPi(10000000)
 
 		// Beautify the JSON output
 		out, _ := json.MarshalIndent(res, "", "  ")
@@ -47,6 +47,7 @@ type response struct {
 	Message string   `json:"message"`
 	EnvVars []string `json:"env"`
 	Fib     []int    `json:"fib"`
+	MonteCarlo float64 `json:"pi"`
 }
 
 
