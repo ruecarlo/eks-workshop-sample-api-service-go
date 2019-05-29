@@ -28,7 +28,7 @@ func main() {
 			res.Fib = append(res.Fib, f())
 		}
 		
-		res.MonteCarlo = monteCarloPi(10000000)
+		res.MonteCarlo = monteCarloPi(100000000)
 
 		// Beautify the JSON output
 		out, _ := json.MarshalIndent(res, "", "  ")
