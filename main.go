@@ -7,6 +7,9 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"math"
+	"math/rand"
+	"time"
 )
 
 func main() {
@@ -24,6 +27,8 @@ func main() {
 		for i := 1; i <= 90; i++ {
 			res.Fib = append(res.Fib, f())
 		}
+		
+		res.MonteCarlo = append(res.MonteCarlo, monteCarloPi(10000000))
 
 		// Beautify the JSON output
 		out, _ := json.MarshalIndent(res, "", "  ")
@@ -44,10 +49,28 @@ type response struct {
 	Fib     []int    `json:"fib"`
 }
 
+
 func fib() func() int {
 	a, b := 0, 1
 	return func() int {
 		a, b = b, a+b
 		return a
 	}
+}
+
+func inCircle(x, y float64) bool {
+	return math.Sqrt(x*x+y*y) <= 1.0
+}
+
+func monteCarloPi(iterations int) float64 {
+	source := rand.NewSource(time.Now().Unix())
+	r := rand.New(source)
+	var h int
+	for i := 0; i <= iterations; i++ {
+		if inCircle(r.Float64(), r.Float64()) {
+			h++
+		}
+	}
+	pi := 4 * float64(h) / float64(iterations)
+	return pi
 }
