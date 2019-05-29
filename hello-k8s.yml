@@ -47,6 +47,13 @@ spec:
       containers:
         - name: hello-k8s
           image: CONTAINER_IMAGE
+              resources:
+          requests:
+            memory: "64Mi"
+            cpu: "256m"
+          limits:
+            memory: "128Mi"
+            cpu: "1024m"
           securityContext:
             privileged: false
             readOnlyRootFilesystem: true
