@@ -50,7 +50,7 @@ spec:
       - key: "spotInstance"
         operator: "Equal"
         value: "true"
-        effect: "NoSchedule"
+        effect: "PreferNoSchedule"
       containers:
         - name: hello-k8s
           image: CONTAINER_IMAGE
