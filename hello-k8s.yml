@@ -38,19 +38,19 @@ spec:
               - key: lifecycle
                 operator: In
                 values:
-                - Ec2Spot
+                - OnDemand
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
             - matchExpressions:
-              - key: myAppType
+              - key: myMixedInstanceGroup
                 operator: In
                 values:
-                - faultTolerant
+                - clusterAutoScaler
       tolerations:
       - key: "spotInstance"
         operator: "Equal"
         value: "true"
-        effect: "PreferNoSchedule"
+        effect: "NoSchedule"
       containers:
         - name: hello-k8s
           image: CONTAINER_IMAGE
