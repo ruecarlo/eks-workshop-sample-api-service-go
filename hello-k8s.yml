@@ -39,7 +39,6 @@ spec:
                 operator: In
                 values:
                 - Ec2Spot
-        nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
           - weight: 1
             preference:
