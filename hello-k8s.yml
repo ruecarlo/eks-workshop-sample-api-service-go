@@ -40,13 +40,12 @@ spec:
                 values:
                 - Ec2Spot
           requiredDuringSchedulingIgnoredDuringExecution:
-          - weight: 1
-            preference:
-              matchExpressions:
+            nodeSelectorTerms:
+            - matchExpressions:
               - key: myAppType
                 operator: In
                 values:
-                - faultTolerant                
+                - faultTolerant
       tolerations:
       - key: "spotInstance"
         operator: "Equal"
