@@ -39,6 +39,15 @@ spec:
                 operator: In
                 values:
                 - Ec2Spot
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - weight: 1
+            preference:
+              matchExpressions:
+              - key: myAppType
+                operator: In
+                values:
+                - faultTolerant                
       tolerations:
       - key: "spotInstance"
         operator: "Equal"
