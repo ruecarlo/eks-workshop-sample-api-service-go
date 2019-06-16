@@ -14,6 +14,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: hello-k8s
+  labels:
+    app: hello-k8s
+    team_id: aws_spot
 spec:
   replicas: 3
   strategy:
