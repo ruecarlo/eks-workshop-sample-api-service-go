@@ -41,14 +41,19 @@ spec:
               - key: lifecycle
                 operator: In
                 values:
-                - OnDemand
+                - Ec2Spot
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
             - matchExpressions:
-              - key: myMixedInstanceGroup
+              - key: environment
                 operator: In
                 values:
-                - clusterAutoScaler
+                - dev
+            - matchExpressions:
+              - key: project
+                operator: In
+                values:
+                - default
       tolerations:
       - key: "spotInstance"
         operator: "Equal"
