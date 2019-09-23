@@ -4,63 +4,26 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"net/http"
-	"os"
-	"strings"
 	"math"
 	"math/rand"
+	"net/http"
+	"os"
+	"strconv"
+	"strings"
 	"time"
 )
 
-func main() {
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+const defaultIterations = 10000000
 
-		f := fib()
+func getEnvVars() []string {
+	var envVars []string
 
-		res := &response{Message: "Hello World"}
-
-		for _, e := range os.Environ() {
-			pair := strings.Split(e, "=")
-			res.EnvVars = append(res.EnvVars, pair[0]+"="+pair[1])
-		}
-		fmt.Println("Environment variables added to results")
-
-		for i := 1; i <= 90; i++ {
-			res.Fib = append(res.Fib, f())
-		}
-		fmt.Println("Fibonacci sequence calculated")
-
-		
-		res.MonteCarlo = monteCarloPi(100000000)
-		fmt.Println("Monte Carlo Pi calculation completed")
-
-		// Beautify the JSON output
-		out, _ := json.MarshalIndent(res, "", "  ")
-
-		// Normally this would be application/json, but we don't want to prompt downloads
-		w.Header().Set("Content-Type", "text/plain")
-
-		io.WriteString(w, string(out))
-
-		fmt.Println("Result ready")
-	})
-	http.ListenAndServe(":8080", nil)
-}
-
-type response struct {
-	Message string   `json:"message"`
-	EnvVars []string `json:"env"`
-	Fib     []int    `json:"fib"`
-	MonteCarlo float64 `json:"pi"`
-}
-
-
-func fib() func() int {
-	a, b := 0, 1
-	return func() int {
-		a, b = b, a+b
-		return a
+	for _, e := range os.Environ() {
+		pair := strings.Split(e, "=")
+		envVars = append(envVars, pair[0]+"="+pair[1])
 	}
+
+	return envVars
 }
 
 func inCircle(x, y float64) bool {
@@ -79,3 +42,58 @@ func monteCarloPi(iterations int) float64 {
 	pi := 4 * float64(h) / float64(iterations)
 	return pi
 }
+
+
+
+func main() {
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		start := time.Now()
+		res := &response{Message: "Monte-carlo pi simulation"}
+
+		res.EnvVars = getEnvVars()
+
+		res.Iterations = defaultIterations
+		urlParams := r.URL.Query()
+		if len(urlParams.Get("iterations")) == 0 {
+			fmt.Printf("Iterations not passed as URL parameter, using default: %d\n",
+				res.Iterations)
+		} else {
+			i, error := strconv.Atoi(urlParams.Get("iterations"))
+			if error == nil {
+				fmt.Printf("Setting iterations to: %d\n", i)
+				res.Iterations = i
+			} else {
+				fmt.Printf("Iterations provided in the URL parameter is not a number, using default: %d\n",
+					res.Iterations)
+			}
+		}
+
+		fmt.Printf("Starting Monte-carlo approximation with %d iterations\n" , res.Iterations)
+		res.MonteCarlo = monteCarloPi(res.Iterations)
+		res.CalcDuration = time.Since(start).Seconds()
+
+		// Beautify the JSON output
+		out, _ := json.MarshalIndent(res, "", "  ")
+
+		// Normally this would be application/json, but we don't want to prompt downloads
+		w.Header().Set("Content-Type", "text/plain")
+
+		io.WriteString(w, string(out))
+
+		fmt.Printf("Monte-carlo pi approximation [%d iterations ]completed in: %.6f seconds\n" ,
+			res.Iterations,
+			time.Since(start).Seconds())
+	})
+	http.ListenAndServe(":8080", nil)
+}
+
+type response struct {
+	Message string         `json:"message"`
+	Iterations int         `json:"iterations"`
+	MonteCarlo float64     `json:"pi"`
+	CalcDuration float64   `json:"duration"`
+	EnvVars []string       `json:"env"`
+
+}
+
+
