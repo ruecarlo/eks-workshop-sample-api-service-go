@@ -70,7 +70,7 @@ func main() {
 
 		fmt.Printf("Starting Monte-carlo approximation with %d iterations\n" , res.Iterations)
 		res.MonteCarlo = monteCarloPi(res.Iterations)
-		res.CalcDuration = time.Since(start).Seconds()
+		res.CalcDurationInSec = time.Since(start).Seconds()
 
 		// Beautify the JSON output
 		out, _ := json.MarshalIndent(res, "", "  ")
@@ -88,11 +88,11 @@ func main() {
 }
 
 type response struct {
-	Message string         `json:"message"`
-	Iterations int         `json:"iterations"`
-	MonteCarlo float64     `json:"pi"`
-	CalcDuration float64   `json:"duration"`
-	EnvVars []string       `json:"env"`
+	Message           string   `json:"message"`
+	Iterations        int      `json:"iterations"`
+	MonteCarlo        float64  `json:"pi"`
+	CalcDurationInSec float64  `json:"duration_in_secconds"`
+	EnvVars           []string `json:"env"`
 
 }
 
